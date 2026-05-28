@@ -180,15 +180,15 @@ GET    /transactions/{accountId} → Account statement
 ## 📁 Project Structure
 
 ```
-ByteBank/
-├── eureka-server/
-├── api-gateway/
-├── bytebank-customer/
-├── bytebank-accounts/
-├── bytebank-transactions/
-├── bytebank-notification/
-├── docker-compose.yml
-└── build.gradle
+ByteBank Ecosystem
+├── bytebank-hub
+├── bytebank-eureka-server
+├── bytebank-api-gateway
+├── bytebank-customer
+├── bytebank-accounts
+├── bytebank-transactions
+├── bytebank-notification
+└── bytebank-infra
 ```
 
 ---
