@@ -48,10 +48,10 @@ This project demonstrates the practical application of patterns such as **Servic
    │  Eureka Server (Service Discovery)  │  Prometheus  │  Grafana   │
    └─────────────────────────────────────────────────────────────────┘
 ```
-- [Accounts Service](https://github.com/thalesF93/bytebank-accounts-service)
-- [Customer Service](https://github.com/thalesF93/bytebank-customer-service)
-- [Transactions Service](https://github.com/thalesF93/bytebank-transactions-service)
-- [Notification Service](https://github.com/thalesF93/bytebank-notification-service)
+- [Accounts Service](https://github.com/thalesF93/bytebank-accounts)
+- [Customer Service](https://github.com/thalesF93/bytebank-customer)
+- [Transactions Service](https://github.com/thalesF93/bytebank-transactions)
+- [Notification Service](https://github.com/thalesF93/bytebank-notification)
 - [API Gateway](https://github.com/thalesF93/bytebank-api-gateway)
 - [Eureka Server](https://github.com/thalesF93/bytebank-eureka-server)
 - [Infra](https://github.com/thalesF93/bytebank-infra)
