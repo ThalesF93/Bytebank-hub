@@ -1,9 +1,9 @@
 # Bytebank-hub
-
+ 
 # ByteBank 💰
-
-> Distributed banking system based on microservices, developed with Java Spring Boot and deployed on AWS.
-
+ 
+> Sistema bancário distribuído baseado em microsserviços, desenvolvido com Java Spring Boot e implantado na AWS.
+ 
 [![Java](https://img.shields.io/badge/Java-21-ED8B00?style=flat&logo=openjdk&logoColor=white)](https://openjdk.org/)
 [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-6DB33F?style=flat&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
 [![Spring Cloud](https://img.shields.io/badge/Spring_Cloud-Netflix-6DB33F?style=flat&logo=spring&logoColor=white)](https://spring.io/projects/spring-cloud)
@@ -11,176 +11,172 @@
 [![AWS](https://img.shields.io/badge/AWS-ECS%20%7C%20RDS%20%7C%20ECR-FF9900?style=flat&logo=amazonaws&logoColor=white)](https://aws.amazon.com/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![Gradle](https://img.shields.io/badge/Gradle-Multi--Module-02303A?style=flat&logo=gradle&logoColor=white)](https://gradle.org/)
-
+ 
 ---
-
-## 📖 About the Project
-
-**ByteBank** is a digital banking system built with microservices architecture, simulating real financial operations such as account creation, transactions between customers, and notifications. The project was developed with a focus on software engineering best practices, scalability, and cloud deployment.
-
-This project demonstrates the practical application of patterns such as **Service Discovery**, **API Gateway**, **synchronous communication via Feign Client**, and **observability with Prometheus + Grafana**, alongside a fully containerized infrastructure with **Docker** and provisioned on **AWS**.
-
+ 
+## 📖 Sobre o Projeto
+ 
+**ByteBank** é um sistema bancário digital construído com arquitetura de microsserviços, simulando operações financeiras reais como criação de contas, transações entre clientes e notificações. O projeto foi desenvolvido com foco em boas práticas de engenharia de software, escalabilidade e implantação em nuvem.
+ 
+Este projeto demonstra a aplicação prática de padrões como **Service Discovery**, **API Gateway**, **comunicação síncrona via Feign Client** e **observabilidade com Prometheus + Grafana**, junto a uma infraestrutura totalmente conteinerizada com **Docker** e provisionada na **AWS**.
+ 
 ---
-
-## 🏗️ Architecture
-
+ 
+## 🏗️ Arquitetura
+ 
 ```
                         ┌─────────────────┐
                         │   API Gateway   │
-                        │   (port 8080)   │
+                        │   (porta 8080)  │
                         └────────┬────────┘
                                  │
               ┌──────────────────┼──────────────────┐
               │                  │                  │
    ┌──────────▼──────┐  ┌────────▼────────┐  ┌─────▼───────────────┐
    │bytebank-customer│  │bytebank-accounts│  │bytebank-transactions│
-   │   (Customers)   │  │   (Accounts)    │  │   (Transactions)    │
+   │    (Clientes)   │  │    (Contas)     │  │   (Transações)      │
    └─────────────────┘  └─────────────────┘  └─────────────────────┘
               │                  │                  │
               └──────────────────┼──────────────────┘
                                  │
                     ┌────────────▼────────────┐
                     │   bytebank-notification  │
-                    │     (Notifications)      │
+                    │     (Notificações)       │
                     └─────────────────────────┘
-
+ 
    ┌─────────────────────────────────────────────────────────────────┐
    │  Eureka Server (Service Discovery)  │  Prometheus  │  Grafana   │
    └─────────────────────────────────────────────────────────────────┘
 ```
-- [Accounts Service](https://github.com/thalesF93/bytebank-accounts)
-- [Customer Service](https://github.com/thalesF93/bytebank-customer)
-- [Transactions Service](https://github.com/thalesF93/bytebank-transactions)
-- [Notification Service](https://github.com/thalesF93/bytebank-notification)
+ 
+- [Serviço de Contas](https://github.com/thalesF93/bytebank-accounts)
+- [Serviço de Clientes](https://github.com/thalesF93/bytebank-customer)
+- [Serviço de Transações](https://github.com/thalesF93/bytebank-transactions)
+- [Serviço de Notificações](https://github.com/thalesF93/bytebank-notification)
 - [API Gateway](https://github.com/thalesF93/bytebank-api-gateway)
 - [Eureka Server](https://github.com/thalesF93/bytebank-eureka-server)
 - [Infra](https://github.com/thalesF93/bytebank-infra)
 ---
-
-## 🚀 Microservices
-
-| Service | Description | Port |
+ 
+## 🚀 Microsserviços
+ 
+| Serviço | Descrição | Porta |
 |---|---|---|
 | `eureka-server` | Service Discovery | 8761 |
-| `api-gateway` | Gateway and Load Balancing | 8080 |
-| `bytebank-customer` | Customer management | 8081 |
-| `bytebank-accounts` | Account management | 8082 |
-| `bytebank-transactions` | Transaction processing | 8083 |
-| `bytebank-notification` | Notifications | 8084 |
-
+| `api-gateway` | Gateway e Balanceamento de Carga | 8080 |
+| `bytebank-customer` | Gerenciamento de clientes | 8081 |
+| `bytebank-accounts` | Gerenciamento de contas | 8082 |
+| `bytebank-transactions` | Processamento de transações | 8083 |
+| `bytebank-notification` | Notificações | 8084 |
+ 
 ---
-
-## 🛠️ Core Technologies
-
+ 
+## 🛠️ Tecnologias Principais
+ 
 - **Backend:** Java 21, Spring Boot 3.x, Spring Cloud, OpenFeign, Spring Data JPA
-- **Infrastructure:** Docker, AWS ECS (Fargate), AWS ECR, AWS RDS (PostgreSQL)
-- **Observability:** Prometheus, Grafana, Spring Boot Actuator
+- **Infraestrutura:** Docker, AWS ECS (Fargate), AWS ECR, AWS RDS (PostgreSQL)
+- **Observabilidade:** Prometheus, Grafana, Spring Boot Actuator
 - **Build:** Gradle Multi-Module
-
 ---
-
-## 🌐 Access Links
-
-| Service | URL | Status |
+ 
+## 🌐 Links de Acesso
+ 
+| Serviço | URL | Status |
 |---|---|---|
-| 📄 **Swagger / API Docs** | [bytebank.thalesf.dev/swagger-ui.html](https://bytebank.thalesf.dev/swagger-ui.html) | ✅ Online |
-| 📊 **Grafana Dashboard** | https://bytebank.thalesf.dev/grafana | ✅ Online |
-
+| 📄 **Swagger / Docs da API** | [bytebank.thalesf.dev/swagger-ui.html](https://bytebank.thalesf.dev/swagger-ui.html) | ✅ Online |
+| 📊 **Dashboard Grafana** | https://bytebank.thalesf.dev/grafana | ✅ Online |
+ 
 ---
-
-## ⚙️ How to Run Locally
-
-### Prerequisites
-- Docker and Docker Compose installed
+ 
+## ⚙️ Como Executar Localmente
+ 
+### Pré-requisitos
+- Docker e Docker Compose instalados
 - JDK 21+
 - Gradle
-
-### Steps
-
+### Passos
+ 
 ```bash
-# Clone the repository
+# Clone o repositório
 git clone https://github.com/ThalesF93/ByteBank.git
 cd ByteBank
-
-# Start all services
+ 
+# Inicie todos os serviços
 docker-compose up --build
 ```
-
-### Local Access URLs
-
-| Service | URL |
+ 
+### URLs de Acesso Local
+ 
+| Serviço | URL |
 |---|---|
 | API Gateway | http://localhost:8080 |
 | Eureka Dashboard | http://localhost:8761 |
 | Swagger UI | http://localhost:8080/swagger-ui.html |
 | Grafana | http://localhost:3000 |
 | Prometheus | http://localhost:9090 |
-
+ 
 ---
-
-## 📡 Main Endpoints
-
-> Full documentation available on **[Swagger UI](https://bytebank.thalesf.dev/swagger-ui.html)**
-
-### 👤 Customers (`/customers`)
+ 
+## 📡 Principais Endpoints
+ 
+> Documentação completa disponível no **[Swagger UI](https://bytebank.thalesf.dev/swagger-ui.html)**
+ 
+### 👤 Clientes (`/customers`)
 ```
-GET    /customers         → List all customers
-GET    /customers/{id}    → Find customer by ID
-POST   /customers         → Create new customer
-PUT    /customers/{id}    → Update customer
-DELETE /customers/{id}    → Remove customer
+GET    /customers         → Listar todos os clientes
+GET    /customers/{id}    → Buscar cliente por ID
+POST   /customers         → Criar novo cliente
+PUT    /customers/{id}    → Atualizar cliente
+DELETE /customers/{id}    → Remover cliente
 ```
-
-### 🏦 Accounts (`/accounts`)
+ 
+### 🏦 Contas (`/accounts`)
 ```
-GET    /accounts          → List accounts
-GET    /accounts/{id}     → Find account by ID
-POST   /accounts          → Create new account
-DELETE /accounts/{id}     → Close account
+GET    /accounts          → Listar contas
+GET    /accounts/{id}     → Buscar conta por ID
+POST   /accounts          → Criar nova conta
+DELETE /accounts/{id}     → Encerrar conta
 ```
-
-### 💸 Transactions (`/transactions`)
+ 
+### 💸 Transações (`/transactions`)
 ```
-POST   /transactions/deposit    → Deposit
-POST   /transactions/withdraw   → Withdraw
-POST   /transactions/transfer   → Transfer
-GET    /transactions/{accountId} → Account statement
+POST   /transactions/deposit     → Depósito
+POST   /transactions/withdraw    → Saque
+POST   /transactions/transfer    → Transferência
+GET    /transactions/{accountId} → Extrato da conta
 ```
-
+ 
 ---
-
-## ☁️ AWS Deployment
-
-- **AWS ECR** — Storage of Docker images for each microservice
-- **AWS ECS (Fargate)** — Serverless container execution
-- **AWS RDS (PostgreSQL)** — Managed database, isolated per service
-
+ 
+## ☁️ Implantação na AWS
+ 
+- **AWS ECR** — Armazenamento das imagens Docker de cada microsserviço
+- **AWS ECS (Fargate)** — Execução de contêineres sem servidor
+- **AWS RDS (PostgreSQL)** — Banco de dados gerenciado, isolado por serviço
 ---
-
-## 📊 Observability
-
-- **Spring Boot Actuator** — Health checks and exposed metrics
-- **Prometheus** — Metrics collection and storage
-- **Grafana** — Monitoring dashboards
-- **Zipkin** — Distributed request tracing 
-
+ 
+## 📊 Observabilidade
+ 
+- **Spring Boot Actuator** — Health checks e métricas expostas
+- **Prometheus** — Coleta e armazenamento de métricas
+- **Grafana** — Dashboards de monitoramento
+- **Zipkin** — Rastreamento distribuído de requisições
 ---
-
-## 🧠 Applied Architecture Patterns
-
-- **Microservices Architecture** — Independent and deployable services
-- **Service Discovery** (Eureka) — Dynamic service registration and discovery
-- **API Gateway Pattern** — Single entry point with routing
-- **Database per Service** — Data isolation per microservice
-- **Synchronous Communication** (Feign Client) — HTTP communication between services
-- **Containerization** (Docker) — Environment portability and consistency
-
+ 
+## 🧠 Padrões de Arquitetura Aplicados
+ 
+- **Arquitetura de Microsserviços** — Serviços independentes e implantáveis
+- **Service Discovery** (Eureka) — Registro e descoberta dinâmica de serviços
+- **API Gateway Pattern** — Ponto único de entrada com roteamento
+- **Database per Service** — Isolamento de dados por microsserviço
+- **Comunicação Síncrona** (Feign Client) — Comunicação HTTP entre serviços
+- **Conteinerização** (Docker) — Portabilidade e consistência de ambiente
 ---
-
-## 📁 Project Structure
-
+ 
+## 📁 Estrutura do Projeto
+ 
 ```
-ByteBank Ecosystem
+Ecossistema ByteBank
 ├── bytebank-hub
 ├── bytebank-eureka-server
 ├── bytebank-api-gateway
@@ -190,12 +186,12 @@ ByteBank Ecosystem
 ├── bytebank-notification
 └── bytebank-infra
 ```
-
+ 
 ---
-
-## 👤 Author
-
+ 
+## 👤 Autor
+ 
 **Thales Fernandes**
-
+ 
 [![GitHub](https://img.shields.io/badge/GitHub-ThalesF93-181717?style=flat&logo=github)](https://github.com/ThalesF93)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Thales_Fernandes-0A66C2?style=flat&logo=linkedin)](https://www.linkedin.com/in/thales-fernandes-24418126a/)
