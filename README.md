@@ -2,21 +2,20 @@
 
 > Sistema bancário distribuído baseado em microsserviços, desenvolvido com Java e Spring Boot.
 
-[![Java](https://img.shields.io/badge/Java-25-ED8B00?style=flat&logo=openjdk&logoColor=white)](https://openjdk.org/)
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.x-6DB33F?style=flat&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![Java](https://img.shields.io/badge/Java-21-ED8B00?style=flat&logo=openjdk&logoColor=white)](https://openjdk.org/)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-6DB33F?style=flat&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
 [![Spring AI](https://img.shields.io/badge/Spring_AI-2.x-6DB33F?style=flat&logo=spring&logoColor=white)](https://spring.io/projects/spring-ai)
 [![Kafka](https://img.shields.io/badge/Apache_Kafka-KRaft-231F20?style=flat&logo=apachekafka&logoColor=white)](https://kafka.apache.org/)
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
-[![AWS](https://img.shields.io/badge/AWS-ECS%20%7C%20RDS%20%7C%20ECR-FF9900?style=flat&logo=amazonaws&logoColor=white)](https://aws.amazon.com/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 
 ---
 
 ## 📖 Sobre o Projeto
 
-**ByteBank** é um sistema bancário digital construído com arquitetura de microsserviços, simulando operações financeiras reais como criação de contas, transações entre clientes e notificações. O projeto foi desenvolvido com foco em boas práticas de engenharia de software, escalabilidade e implantação em nuvem.
+**ByteBank** é um sistema bancário digital construído com arquitetura de microsserviços, simulando operações financeiras reais como criação de contas, transações entre clientes, detecção de fraudes e notificações. O projeto foi desenvolvido com foco em boas práticas de engenharia de software, escalabilidade e resiliência.
 
-O ecossistema inclui um serviço de inteligência financeira com IA que permite ao usuário registrar e consultar transações em linguagem natural pelo WhatsApp, integrando Whisper, GPT-4o-mini e RAG com pgvector.
+O ecossistema inclui um serviço de antifraude com detecção em tempo real via Kafka e Strategy Pattern, e um serviço de inteligência financeira com IA que permite ao usuário registrar e consultar transações em linguagem natural pelo WhatsApp, integrando Whisper, GPT-4o-mini e RAG com pgvector.
 
 ---
 
@@ -33,19 +32,28 @@ O ecossistema inclui um serviço de inteligência financeira com IA que permite 
 ┌────────▼────────┐   ┌──────────▼──────┐   ┌───────────▼─────────┐
 │bytebank-customer│   │bytebank-accounts│   │bytebank-transactions│
 │   (Clientes)    │   │   (Contas)      │   │   (Transações)      │
-└─────────────────┘   └─────────────────┘   └─────────────────────┘
-         │                       │                       │
-         └───────────────────────┼───────────────────────┘
-                                 │ Kafka (transaction.created)
+└─────────────────┘   └─────────────────┘   └──────────┬──────────┘
+                                                        │
+                                          Kafka (transaction.created)
+                                                        │
+                              ┌─────────────────────────▼──────────────────┐
+                              │              fraud-service                  │
+                              │  Strategy Pattern · Redis · 4 Regras        │
+                              └─────────────────────────┬──────────────────┘
+                                                        │
+                               Kafka (score.response + fraud.notification)
+                                          │                        │
+                   ┌──────────────────────▼───┐    ┌──────────────▼──────────┐
+                   │   bytebank-transactions   │    │   bytebank-notification  │
+                   │   (executa ou bloqueia)   │    │   (email + WhatsApp)     │
+                   └───────────────────────────┘    └─────────────────────────┘
+                                 │
+                   Kafka (transaction.created)
+                                 │
                     ┌────────────▼────────────┐
                     │   finance-ai-service     │
                     │  GPT-4o-mini + RAG       │
                     │  pgvector + Whisper      │
-                    └─────────────────────────┘
-                                 │
-                    ┌────────────▼────────────┐
-                    │   bytebank-notification  │
-                    │     (Notificações)       │
                     └─────────────────────────┘
 
    ┌──────────────────────────────────────────────────────────────────┐
@@ -65,18 +73,19 @@ O ecossistema inclui um serviço de inteligência financeira com IA que permite 
 | `bytebank-customer` | Gerenciamento de clientes | 8081 |
 | `bytebank-accounts` | Gerenciamento de contas | 8082 |
 | `bytebank-transactions` | Processamento de transações | 8083 |
-| `bytebank-notification` | Notificações por e-mail | 8084 |
+| `bytebank-notification` | Notificações por e-mail e WhatsApp | 8084 |
 | `finance-ai-service` | IA financeira via WhatsApp | 8085 |
+| `fraud-service` | Detecção de fraudes em tempo real | 8086 |
 
 ---
 
 ## 🛠️ Stack Tecnológica
 
 **Backend**
-Java 25, Spring Boot 4.x, Spring Cloud, Spring AI 2.x, OpenFeign, Spring Data JPA, Resilience4j
+Java 21, Spring Boot 3.x, Spring Cloud, Spring AI 2.x, OpenFeign, Spring Data JPA, Resilience4j
 
 **Inteligência Artificial**
-OpenAI GPT-4o-mini (function calling), Whisper (transcrição de áudio), text-embedding-ada-002 (embeddings), pgvector (busca semântica por similaridade)
+OpenAI GPT-4o-mini (function calling), Whisper (transcrição de áudio), text-embedding-3-small (embeddings), pgvector (busca semântica por similaridade)
 
 **Mensageria**
 Apache Kafka (KRaft, sem Zookeeper), RabbitMQ
@@ -88,10 +97,30 @@ PostgreSQL 16, pgvector, Redis
 WAHA (WhatsApp HTTP API), n8n
 
 **Infraestrutura**
-Docker, Docker Compose, AWS ECS Fargate, AWS ECR, AWS RDS
+Docker, Docker Compose
 
 **Observabilidade**
 Prometheus, Grafana, Zipkin (Micrometer Tracing), Spring Boot Actuator
+
+---
+
+## 🔐 Fraud Service
+
+O `fraud-service` é o serviço de detecção de fraudes do ByteBank. Analisa cada transação em tempo real de forma assíncrona via Kafka e aplica 4 regras de detecção implementadas com o padrão Strategy.
+
+**Regras de detecção**
+- 🕐 **Horário suspeito** — transações entre 00h e 05h UTC
+- 💰 **Valor alto** — acima de R$ 5.000
+- 🔁 **Repetição** — mesma transação (valor + destino) em menos de 2 minutos (Redis)
+- 📈 **Frequência** — 3 ou mais transações em 10 minutos (Redis)
+
+**Scores e ações**
+- ✅ **LOW** (0 regras) — transação aprovada e executada automaticamente
+- ⚠️ **MEDIUM** (1 regra) — transação em `PENDING_CONFIRMATION`, usuário notificado por e-mail e WhatsApp para confirmar
+- 🚫 **HIGH** (2+ regras) — transação bloqueada imediatamente, usuário notificado
+
+**Fluxo de confirmação MEDIUM**
+O usuário responde "sim" ou "não" diretamente no WhatsApp. O n8n captura a resposta e chama o API Gateway, que resolve a identidade do usuário via `customer-service` e encaminha para o `transaction-service`, que executa ou bloqueia a transação.
 
 ---
 
@@ -117,6 +146,7 @@ Toda transação bancária processada pelo `bytebank-transactions` publica um ev
 - [Serviço de Transações](https://github.com/thalesF93/bytebank-transactions)
 - [Serviço de Notificações](https://github.com/thalesF93/bytebank-notification)
 - [Finance AI Service](https://github.com/ThalesF93/bytebank-finance-ai-service)
+- [Fraud Service](https://github.com/ThalesF93/fraud-service)
 - [API Gateway](https://github.com/thalesF93/bytebank-api-gateway)
 - [Eureka Server](https://github.com/thalesF93/bytebank-eureka-server)
 - [Infra](https://github.com/thalesF93/bytebank-infra)
@@ -127,8 +157,7 @@ Toda transação bancária processada pelo `bytebank-transactions` publica um ev
 
 | Serviço | URL | Status |
 |---------|-----|--------|
-| 📄 Swagger / Docs | [bytebank.thalesf.dev/swagger-ui.html](https://bytebank.thalesf.dev/swagger-ui.html) | ✅ Online |
-| 📊 Grafana | [bytebank.thalesf.dev/grafana](https://bytebank.thalesf.dev/grafana) | ✅ Online |
+| 📄 API Docs | [thalesf93.github.io/bytebanck-docs](https://thalesf93.github.io/bytebanck-docs/) | ✅ Online |
 
 ---
 
@@ -137,7 +166,7 @@ Toda transação bancária processada pelo `bytebank-transactions` publica um ev
 ### Pré-requisitos
 
 - Docker e Docker Compose instalados
-- JDK 25+
+- JDK 21+
 - Rede Docker criada: `docker network create bytebank-net`
 
 ### Subindo os serviços
@@ -157,8 +186,9 @@ Siga a ordem recomendada:
 4. `bytebank-accounts`
 5. `bytebank-transactions`
 6. `bytebank-notification`
-7. `finance-ai-service`
-8. `api-gateway`
+7. `fraud-service`
+8. `finance-ai-service`
+9. `api-gateway`
 
 ### URLs de Acesso Local
 
@@ -171,12 +201,14 @@ Siga a ordem recomendada:
 | Prometheus | http://localhost:9090 |
 | Kafka UI | http://localhost:8090 |
 | RabbitMQ Management | http://localhost:15672 |
+| WAHA Dashboard | http://localhost:3000 |
+| n8n | http://localhost:5678 |
 
 ---
 
 ## 📡 Principais Endpoints
 
-> Documentação completa disponível no **[Swagger UI](https://bytebank.thalesf.dev/swagger-ui.html)**
+> Documentação completa disponível no **[API Docs](https://thalesf93.github.io/bytebanck-docs/)**
 
 ### 👤 Clientes (`/api/v2/customers`)
 ```
@@ -197,10 +229,11 @@ DELETE /api/v1/accounts/{id}     → Encerrar conta
 
 ### 💸 Transações (`/api/v1/transactions`)
 ```
-POST   /api/v1/transactions/deposit     → Depósito
-POST   /api/v1/transactions/withdraw    → Saque
-POST   /api/v1/transactions/transfer    → Transferência
-GET    /api/v1/transactions/{accountId} → Extrato da conta
+POST   /api/v1/transactions/deposit              → Depósito
+POST   /api/v1/transactions/withdraw             → Saque
+POST   /api/v1/transactions/transfer             → Transferência
+GET    /api/v1/transactions/{accountId}          → Extrato da conta
+POST   /api/v1/transactions/user-confirmation    → Confirmação de transação suspeita
 ```
 
 ### 🤖 Finance AI (`/api/v1/operations`)
@@ -208,16 +241,6 @@ GET    /api/v1/transactions/{accountId} → Extrato da conta
 POST   /api/v1/operations/whatsapp  → Recebe áudio ou texto do WhatsApp
 POST   /api/v1/operations/create    → Persiste operação diretamente
 ```
-
----
-
-## ☁️ Implantação na AWS
-
-- **AWS ECR** — Armazenamento das imagens Docker de cada microsserviço
-- **AWS ECS (Fargate)** — Execução de containers sem gerenciamento de servidores
-- **AWS RDS (PostgreSQL)** — Banco de dados gerenciado, isolado por serviço
-- **AWS ALB** — Application Load Balancer com HTTPS e domínio customizado
-- **AWS ACM** — Certificado SSL gerenciado
 
 ---
 
@@ -232,6 +255,7 @@ Ecossistema ByteBank
 ├── bytebank-accounts
 ├── bytebank-transactions
 ├── bytebank-notification
+├── fraud-service
 ├── finance-ai-service
 └── bytebank-infra
 ```
@@ -245,6 +269,12 @@ Microsserviços independentes, Service Discovery (Eureka), API Gateway com filtr
 
 **Clean Architecture**
 Todos os serviços seguem separação em camadas domain, application e infrastructure, permitindo evolução independente de cada camada.
+
+**Strategy Pattern**
+O `fraud-service` implementa cada regra de detecção como uma estratégia independente — `TimeWindowRule`, `AmountRule`, `RepetitionRule`, `FrequencyRule` — todas implementando a interface `FraudRule` e avaliadas pelo `FraudRuleEngine`.
+
+**Event-Driven**
+O fluxo de fraude é 100% assíncrono via Kafka. O `fraud-service` não faz chamadas HTTP — apenas consome e publica eventos. O `transaction-service` reage ao resultado publicado pelo fraud-service.
 
 **Resiliência**
 Idempotência com Redis (TTL 24h), Dead Letter Topic no Kafka, retry automático com backoff, Circuit Breaker com fallback.
